@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+.calendar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-origin: top left; /* Adjust if needed */
+  height: fit-content;
+}
+
+.calendar {
+    width: 200px;
+    padding: 6.6px;
+    background: #EBEAF0;
+    border-radius: 7.8px;
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.2);
+    font-family: Arial, sans-serif;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    font-family: "Inter", serif;
+    align-items: center;
+    font-size: 11.7px;
+    font-weight: bolder;
+    padding: 6.6px;
+    margin-bottom: 3px;
+}
+
+.switch-btn {
+    width: 5%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    font-size: 11.7px;
+    cursor: pointer;
+    color: black;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    font-size: 9.1px;
+    padding: 3px;
+    color: #777;
+}
+
+td {
+    width: 26px;
+    height: 26px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 10.4px;
+    border: 0.5px solid #bbbbbb;
+}
+
+.day:hover {
+    background: #dce1eb;
+}
+
+.selected {
+    background: #3B3BD7;
+    color: white;
+    font-weight: bold;
+}
+.day-badge {
+    background-color: #3B3BD7;
+    color: white;
+    border-radius: 8px;
+    padding: 4px 8px;
+    display: inline-block;
+    width: 70%;
+  }
+  
+/* global.css */
+.page-background {
+    background-color: #EBEBEB;
+    min-height: 80vh;
+    background-image: url('/icons/background.png');
+    background-size: cover;
+    background-position: fixed;
+    top: 0;
+    left: 0; 
+    background-repeat: no-repeat;
+  }
+
+.font-inter {
+    font-family: "Inter", sans-serif;
+  }
+
+/* sidebarmenu css*/	
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: width 0.3s ease;
+  }
+  
+  .logo img {
+    transition: transform 0.3s ease;
+  }
+  
+  .logo img:hover {
+    transform: scale(1.1);
+  }
+  
+  .menu-items .list-group-item {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .menu-items .list-group-item:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.1);
+  }
+  
+  .btn-primary {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background-color: #cbd3f2 !important;
+    transform: scale(1.1);
+  }
