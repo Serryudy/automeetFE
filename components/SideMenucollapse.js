@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Calendar from "./calendar";
-import { FaCalendar, FaUsers, FaChartBar, FaClock, FaPlus, FaCog } from "react-icons/fa";
-import { BsPeople } from "react-icons/bs";
+import { FaCog } from "react-icons/fa";
+import Link from 'next/link'
 
 const SidebarMenu = ({ showmenuicon = true, onToggle }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -67,21 +67,24 @@ const SidebarMenu = ({ showmenuicon = true, onToggle }) => {
 
       {/* Create Button */}
       <div className="d-flex mb-3 w-100" style={{ justifyContent: isCollapsed ? "center" : "flex-start" }}>
-        <button
-          className="btn d-flex align-items-center justify-content-center"
-          style={{
-            width: isCollapsed ? "45px" : "120px",
-            height: "45px",
-            backgroundColor: "#DDE5F9",
-            border: "none",
-            color: "#000",
-            borderRadius: isCollapsed ? "50%" : "30px",
-            transition: "all 0.3s ease-in-out",
-          }}
-        >
-          <FaPlus size={20} />
-          {!isCollapsed && <span className="ms-2 fw-semibold">Create</span>}
-        </button>
+        <Link href={"/create"}>
+          <button
+            className="btn d-flex align-items-center justify-content-center"
+            style={{
+              width: isCollapsed ? "45px" : "120px",
+              height: "45px",
+              backgroundColor: "#DDE5F9",
+              border: "none",
+              color: "#000",
+              borderRadius: isCollapsed ? "50%" : "30px",
+              transition: "all 0.3s ease-in-out",
+            }}
+            href="/create"
+          >
+            <img src="/icons/add.png" alt="Create" style={{ width: "20px" }} className="me-2"/>
+            {!isCollapsed && <span className="ms-2 fw-semibold">Create</span>}
+          </button>
+        </Link>
       </div>
 
       {/* Menu Items */}

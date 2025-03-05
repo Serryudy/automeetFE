@@ -1,8 +1,7 @@
 "use client";
-
 import { useState } from "react";
 
-const Calendar = () => {
+const Calendar = ({ onDateSelect }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
 
@@ -13,7 +12,6 @@ const Calendar = () => {
     const firstDayOfMonth = new Date(year, month, 1);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // Adjust starting day to align with Monday as the first day of the week
     const startingDay = (firstDayOfMonth.getDay() - 1 + 7) % 7;
     const dates = [];
     let day = 1;
@@ -27,17 +25,17 @@ const Calendar = () => {
         if ((i === 0 && j < startingDay) || day > daysInMonth) {
           week.push(<td key={`empty-${i}-${j}`} className="empty"></td>);
         } else {
-          const isSelected =
-            selectedDate &&
-            selectedDate.getFullYear() === year &&
-            selectedDate.getMonth() === month &&
-            selectedDate.getDate() === day;
+          const currentDateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+          const isSelected = selectedDate === currentDateStr;
 
           week.push(
             <td
               key={day}
               className={`day ${isSelected ? "selected" : ""}`}
-              onClick={() => setSelectedDate(new Date(year, month, day))}
+              onClick={() => {
+                setSelectedDate(currentDateStr); // Update local state
+                onDateSelect(currentDateStr); // Pass selected date to parent
+              }}
             >
               {day}
             </td>
