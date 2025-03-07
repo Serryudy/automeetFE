@@ -4,6 +4,7 @@ import { FaUsers, FaCalendarAlt, FaCheckCircle, FaSearch, FaChevronDown } from '
 import { RiMovie2Line } from 'react-icons/ri';
 import Calendar from './calendar';
 import 'react-datepicker/dist/react-datepicker.css';
+import Link from 'next/link';
 
 const FormStepNavigator = ({ currentStep, totalSteps, onNext }) => {
   return (
@@ -48,13 +49,15 @@ const SuccessStep = ({ onToCalendar }) => {
       <p className="mb-4 text-muted fw-semibold fs-3">
         Your meeting is on your<br />calendar now
       </p>
-      <button 
-        type="button" 
-        className="btn btn-primary btn-lg px-4 mt-4"
-        onClick={onToCalendar}
-      >
-        To my calendar
-      </button>
+      <Link href={"/"	}>
+        <button
+          type="button"
+          className="btn btn-primary btn-lg px-4 mt-4"
+          onClick={onToCalendar}
+        >
+          To my calendar
+        </button>
+      </Link>
     </div>
   );
 };
