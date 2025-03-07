@@ -7,6 +7,7 @@ import SidebarMenu from '../../components/SideMenucollapse';
 import ProfileHeader from '@/components/profileHeader';
 import CreateEvent from '../../components/CreateEvent';
 
+
 export default function Create() {
   return (
     <div className="d-flex page-background " style={{ minHeight: '100vh' }}>  
@@ -24,9 +25,9 @@ export default function Create() {
 
         {/* Calendar Header */}
         <div className="mb-4">
-          <h1 className="h2 mb-2 font-inter fw-semibold fs-1">Calendar</h1>
-          <p className="text-muted">
-            Stay ahead of your schedule and make every moment<br /> count with your weekly planner.
+          <h1 className="h2 mb-2 font-inter fw-bold">Create Event</h1>
+          <p className="text-muted ">
+            Stay on track with this upcoming/past session.
           </p>
         </div>
 

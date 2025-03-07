@@ -79,12 +79,6 @@ export default function Meeting() {
             </div>
         </div>
 
-        {/* Create Event Section */}
-        <div className="d-flex gap-3 w-100" >
-          <div className="shadow-sm ">
-            
-          </div>
-        </div>
       </div>
     </div>
     );

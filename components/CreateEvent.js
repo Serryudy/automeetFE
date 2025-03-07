@@ -36,9 +36,9 @@ const FormStepNavigator = ({ currentStep, totalSteps, onNext }) => {
 
 const SuccessStep = ({ onToCalendar }) => {
   return (
-    <div className="animate-fade-in d-flex flex-column align-items-start justify-content-center h-100">
+    <div className="animate-fade-in  font-inter d-flex flex-column align-items-start justify-content-center h-100">
       <div className='d-flex flex-row align-items-center justify-content-start gap-5'>
-        <h2 className="mb-3 fs-1 fw-bold">Success</h2>
+        <h2 className="mb-3 fs-1  fw-bold">Success</h2>
         <img
           src="/success.png"
           alt="Success"
@@ -46,7 +46,7 @@ const SuccessStep = ({ onToCalendar }) => {
           style={{ width: '100px', height: 'auto' }}
         />
       </div>
-      <p className="mb-4 text-muted fw-semibold fs-3">
+      <p className="mb-4 text-muted font-inter fw-semibold fs-3">
         Your meeting is on your<br />calendar now
       </p>
       <Link href={"/"	}>
@@ -223,9 +223,9 @@ const DirectScheduleForm = () => {
   }, []);
 
   return (
-    <div className="h-100 d-flex flex-column">
+    <div className="h-100 font-inter d-flex flex-column">
       {currentStep !== 3 && (
-        <h2 className="mb-4 fw-semibold">
+        <h2 className="mb-4 fw-bold">
           Direct Schedule <br /> A Meeting
         </h2>
       )}
@@ -647,9 +647,9 @@ const GroupMeetingForm = () => {
   }, []);
 
   return (
-    <div className="h-100 d-flex flex-column">
+    <div className="h-100 font-inter d-flex flex-column">
       {currentStep !== 3 && (
-        <h2 className="mb-4">
+        <h2 className="mb-4 fw-bold">
           Create Group <br /> Meeting
         </h2>
       )}
@@ -1081,9 +1081,9 @@ const RoundRobinForm = () => {
   }, []);
 
   return (
-    <div className="h-100 d-flex flex-column">
+    <div className="h-100 font-inter d-flex flex-column">
       {currentStep !== 3 && (
-        <h2 className="mb-4">
+        <h2 className="mb-4 fw-bold">
           Create Round Robin <br /> Meeting
         </h2>
       )}
@@ -1439,12 +1439,12 @@ const CreateEvent = () => {
   return (
     <div className="container-fluid p-0">
       <div className="card mx-auto" style={{ 
-        width: '1200px',
+        width: '1000px',
         maxWidth: '1000px', 
-        height: '600px',
+        height: '500px',
         borderRadius: '16px', 
         overflow: 'hidden', 
-        boxShadow: '0 10px 25px rgba(0,0,0,0.1)' 
+        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)' 
       }}>
         <div className="row g-0 h-100">
           {/* Left Sidebar */}
@@ -1478,7 +1478,7 @@ const CreateEvent = () => {
           </div>
           
           {/* Right Form Area */}
-          <div className="col-md-7 h-100 d-flex flex-column" style={{ backgroundColor: 'transparent', padding: '90px 50px', overflowY: 'scroll'  }}>
+          <div className="col-md-7 h-100 d-flex flex-column" style={{ backgroundColor: 'transparent', padding: '60px 50px', overflowY: 'scroll'  }}>
             <div className="flex-grow-1">
               {renderForm()}
             </div>

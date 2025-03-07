@@ -54,9 +54,10 @@ const CalendarPage = () => {
 
         {/* Calendar Header */}
         <div className="mb-4">
-          <h1 className="h2 mb-2 font-inter fw-semibold fs-1">Calendar</h1>
+          <h1 className="h2 mb-1 font-inter fw-bold">Calendar</h1>
           <p className="text-muted">
-            Stay ahead of your schedule and make every moment<br /> count with your weekly planner.
+          Stay ahead of your schedule and make every moment<br /> 
+          count with your weekly planner.
           </p>
         </div>
 
