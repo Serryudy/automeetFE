@@ -209,3 +209,46 @@ td {
 .react-datepicker__day-name {
   color: #6c757d;
 }
+
+@media (max-width: 576px) {
+  .col-6 {
+    padding: 0 4px;
+  }
+  .btn {
+    padding: 8px;
+  }
+}
+/* Mobile-specific styles */
+@media (max-width: 767px) {
+  .icon-container {
+    font-size: 20px;
+  }
+
+  .mobile-options-bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .form-container {
+    height: calc(100vh - 120px); /* Adjust based on your header height */
+    overflow-y: auto;
+  }
+}
+
+/* Desktop-specific styles */
+@media (min-width: 768px) {
+  .icon-container {
+    font-size: 24px;
+  }
+
+  .desktop-sidebar {
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .desktop-form {
+    height: 100%;
+    overflow-y: auto;
+  }
+}
+

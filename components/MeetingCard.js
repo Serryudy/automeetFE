@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaClock, FaPencilAlt } from 'react-icons/fa';
+import Link from 'next/link';
 
 // Mock data for demonstration purposes
 const demoMeetings = [
@@ -94,9 +95,11 @@ const MeetingCard = ({ meetingId }) => {
         </div>
       </div>
       <div className="ms-auto d-flex align-items-center justify-content-end w-100">
-        <button className="btn btn-primary d-flex align-items-center gap-1" style={{backgroundColor: "#3B3BD7", border: "none", fontSize: "12px"}}>
-          Edit <FaPencilAlt style={{fontSize: "14px"}} />
-        </button>
+        <Link href={`/meetingdetails`}>
+            <button className="btn btn-primary d-flex align-items-center gap-1" style={{backgroundColor: "#3B3BD7", border: "none", fontSize: "12px"}}>
+              Edit <FaPencilAlt style={{fontSize: "14px"}} />
+            </button>
+        </Link>
       </div>
       
       <style jsx>{`

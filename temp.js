@@ -1,130 +1,105 @@
 'use client';
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../styles/global.css';
 import SidebarMenu from '../../components/SideMenucollapse';
 import ProfileHeader from '@/components/profileHeader';
-import MeetingCard from '@/components/MeetingCard';
-import { FaSearch, FaFilter, FaCalendarAlt } from 'react-icons/fa';
+import { FaBars } from 'react-icons/fa';
 
-export default function Meeting() {
+export default function Content() {
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+  const [isMobile, setIsMobile] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) setShowMobileMenu(false);
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+
+  const handleSidebarToggle = (collapsed) => {
+    setIsSidebarCollapsed(collapsed);
+  };
+
+
+
   return (
-    <div className="d-flex page-background" style={{ minHeight: '100vh', background: '#f0f0f0' }}>  
-      {/* Sidebar - white background card */}
-      <div style={{ position: 'fixed', left: 10, top: 10, bottom: 0, zIndex: 1000 }}>
-        <SidebarMenu />
-      </div>
-      
-      {/* Main content area */}
-      <div className="flex-grow-1" style={{ 
-        marginLeft: '360px', 
-        padding: '20px', 
-        position: 'relative',
-        overflowX: 'hidden'
-      }}>
-        {/* Colorful background shapes */}
-        <div className="position-absolute" style={{ 
-          top: 0, 
-          right: 0, 
+    <div className="d-flex page-background font-inter" style={{ minHeight: '100vh' }}>  
+      {/* Mobile Menu Button */}
+      {isMobile && (
+        <button 
+          className="btn btn-light position-fixed rounded-circle p-2"
+          style={{ zIndex: 1001, top: '1rem', left: '1rem' }}
+          onClick={() => setShowMobileMenu(!showMobileMenu)}
+        >
+          <FaBars size={20} />
+        </button>
+      )}
+
+      {/* Sidebar Menu */}
+      <div 
+        style={{ 
+          position: 'fixed', 
+          left: 10, 
+          top: 10, 
           bottom: 0, 
-          left: 0, 
-          zIndex: -1, 
-          overflow: 'hidden' 
-        }}>
-          <div style={{ 
-            position: 'absolute', 
-            top: '15%', 
-            right: '-10%', 
-            width: '70%', 
-            height: '90%', 
-            background: '#FFD700', 
-            transform: 'rotate(-15deg)', 
-            zIndex: -1 
-          }}></div>
-          <div style={{ 
-            position: 'absolute', 
-            bottom: '10%', 
-            left: '30%', 
-            width: '50%', 
-            height: '60%', 
-            background: '#1E90FF', 
-            transform: 'rotate(-15deg)', 
-            zIndex: -2 
-          }}></div>
-          <div style={{ 
-            position: 'absolute', 
-            top: '50%', 
-            right: '20%', 
-            width: '20%', 
-            height: '30%', 
-            background: '#32CD32', 
-            transform: 'rotate(-15deg)', 
-            zIndex: -3 
-          }}></div>
-        </div>
-        
-        {/* Header area with profile */}
-        <div className="d-flex justify-content-end mb-4">
+          zIndex: 1000,
+          transform: isMobile ? `translateX(${showMobileMenu ? '0' : '-100%'})` : 'none',
+          transition: 'transform 0.3s ease-in-out'
+        }}
+      >
+        <SidebarMenu 
+          showmenuicon={true} 
+          onToggle={handleSidebarToggle}
+        />
+      </div>
+
+      {/* Mobile Overlay */}
+      {isMobile && showMobileMenu && (
+        <div
+          className="position-fixed top-0 start-0 w-100 h-100"
+          style={{
+            backgroundColor: 'rgba(0,0,0,0.3)',
+            zIndex: 999,
+            transition: 'opacity 0.3s'
+          }}
+          onClick={() => setShowMobileMenu(false)}
+        ></div>
+      )}
+
+      {/* Main content */}
+      <div 
+        className="flex-grow-1 p-3 p-md-4"
+        style={{
+          marginLeft: isMobile ? 0 : (isSidebarCollapsed ? '90px' : '340px'),
+          maxWidth: isMobile ? '100%' : (isSidebarCollapsed ? 'calc(100% - 120px)' : 'calc(100% - 360px)'),
+          transition: 'margin-left 0.3s ease-in-out, max-width 0.3s ease-in-out'
+        }}
+      >
+        {/* Profile Header */}
+        <div className="mb-3 mb-md-4">
           <ProfileHeader />
         </div>
-        
-        {/* Meetings header */}
-        <div className="mb-4">
-          <h1 className="h2 mb-1 font-inter fw-bold">Meetings</h1>
-          <p className="text-muted">
-            Stay on track with this upcoming/past session.
+
+        {/* Content Header */}
+        <div className="mb-3 mb-md-4">
+          <h1 className="h3 h2-md mb-1 mb-md-2 font-inter fw-bold">Content Upload</h1>
+          <p className="text-muted small">
+            Keep things related to your session in one place.
           </p>
         </div>
         
-        {/* Search bar */}
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <div className="position-relative flex-grow-1 me-3">
-            <div className="input-group">
-              <span className="input-group-text bg-white border-end-0">
-                <FaSearch className="text-muted" />
-              </span>
-              <input 
-                type="text" 
-                className="form-control border-start-0" 
-                placeholder="Try searching anything related to the meeting"
-                style={{ borderRadius: "0 20px 20px 0" }}
-              />
-            </div>
-          </div>
-          
-          <button className="btn btn-light rounded-pill d-flex align-items-center gap-2">
-            Filter <FaFilter />
-          </button>
-        </div>
-        
-        {/* Meeting tabs */}
-        <div className="mb-4">
-          <ul className="nav nav-tabs border-0">
-            <li className="nav-item">
-              <a className="nav-link active" href="#">Ongoing</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">Upcoming</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">Unconfirmed</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">Past</a>
-            </li>
-            <li className="nav-item ms-auto">
-              <a className="nav-link d-flex align-items-center" href="#">
-                Date range <FaCalendarAlt className="ms-2" />
-              </a>
-            </li>
-          </ul>
-        </div>
-        
-        {/* Meeting cards */}
-        <div className="d-flex flex-wrap gap-4">
-          <MeetingCard />
-          <MeetingCard />
-          <MeetingCard />
+        <div className='w-100 rounded-3 bg-light p-3 p-md-4'>
+            {/* Content */}
         </div>
       </div>
     </div>
