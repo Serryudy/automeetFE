@@ -120,6 +120,7 @@ export default function Meeting() {
           </p>
         </div>
 
+        {/* Search and Filter */}
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 mb-md-4 gap-2">
           <div className="position-relative w-100">
             <div className="input-group bg-white rounded-pill" style={{ height: windowWidth < 576 ? '40px' : '48px', border: '2px solid #ccc' }}>
