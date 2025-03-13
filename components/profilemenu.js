@@ -128,4 +128,4 @@ const ProfileMenu = () => {
   );
 };
 
-export default AccountSettings;
+export default ProfileMenu;
