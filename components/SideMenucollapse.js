@@ -1,27 +1,32 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import Calendar from "./calendar";
 import { FaCog, FaUser, FaBell, FaGlobe, FaCalendarAlt, FaVideo } from "react-icons/fa";
-import Link from 'next/link';
+import Link from "next/link";
+import { usePathname } from "next/navigation"; // Import usePathname
 
 const SidebarMenu = ({ showmenuicon = true, onToggle }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [currentView, setCurrentView] = useState("main"); // "main" or "settings"
+  const pathname = usePathname(); // Get the current URL path
+
+  // Determine the current view based on the URL
+  const isSettingsView = pathname.includes("/settings");
 
   const toggleSidebar = () => {
     const newCollapsedState = !isCollapsed;
     setIsCollapsed(newCollapsedState);
-    
-    if (onToggle && typeof onToggle === 'function') {
+
+    if (onToggle && typeof onToggle === "function") {
       onToggle(newCollapsedState);
     }
   };
-  
+
   useEffect(() => {
-    if (onToggle && typeof onToggle === 'function') {
+    if (onToggle && typeof onToggle === "function") {
       onToggle(isCollapsed);
     }
-  }, [isCollapsed]); // Added isCollapsed to dependency array
+  }, [isCollapsed]);
 
   const menuItems = [
     { icon: <img src="/icons/calendar.png" alt="Calendar" style={{ width: "22px" }} />, label: "Calendar", path: "/" },
@@ -33,34 +38,32 @@ const SidebarMenu = ({ showmenuicon = true, onToggle }) => {
 
   const settingsItems = [
     { icon: <FaUser size={20} />, label: "Profile", path: "/settings/profile" },
-    { icon: <FaCog size={20} />, label: "Settings", path: "/settings/general" },
+    { icon: <FaCog size={20} />, label: "Settings", path: "/settings" },
     { icon: <FaBell size={20} />, label: "Notifications", path: "/settings/notifications" },
-    { icon: <FaGlobe size={20} />, label: "Communication settings", path: "/settings/communication" },
-    { icon: <FaCalendarAlt size={20} />, label: "Calendar sync", path: "/settings/calendar-sync" },
+    { icon: <FaCalendarAlt size={20} />, label: "Calendar sync", path: "/settings/calendarSync" },
     { icon: <FaVideo size={20} />, label: "Integration", path: "/settings/integration" },
   ];
 
-  // New function to render the settings view
+  // Render the settings view
   const renderSettingsView = () => {
     return (
-      <div className="settings-view w-100 h-100 d-flex flex-column px-3 ">
-
+      <div className="settings-view w-100 h-100 d-flex flex-column px-3">
         <h4 className="text-primary mb-5">AutoMeet</h4>
         {/* Back button */}
-        <button 
-          className="btn btn-link text-primary ps-0 d-flex align-items-center" 
-          onClick={() => setCurrentView("main")}
-          style={{ textDecoration: 'none', fontSize: '18px' }}
+        <Link
+          href="/"
+          className="btn btn-link text-primary ps-0 d-flex align-items-center"
+          style={{ textDecoration: "none", fontSize: "18px" }}
         >
-          <span style={{ fontSize: '15px' }}>&lt;</span>
+          <span style={{ fontSize: "15px" }}>&lt;</span>
           <span className="ms-2 fs-10">Back to home</span>
-        </button>
-        
+        </Link>
+
         {/* Settings header */}
         <span className="mb-4 fw-bold fs-5">Account settings</span>
-        
+
         {/* Settings menu items */}
-        <div className="list-group list-group-flush ">
+        <div className="list-group list-group-flush">
           {settingsItems.map(({ icon, label, path }, index) => (
             <Link
               key={index}
@@ -80,8 +83,8 @@ const SidebarMenu = ({ showmenuicon = true, onToggle }) => {
     );
   };
 
-  // Return the main sidebar or settings view based on currentView state
-  if (currentView === "settings") {
+  // Render the main sidebar or settings view based on the URL
+  if (isSettingsView) {
     return (
       <div
         className={`sidebar bg-white align-items-start shadow-sm d-flex flex-column`}
@@ -97,6 +100,7 @@ const SidebarMenu = ({ showmenuicon = true, onToggle }) => {
     );
   }
 
+  // Render the main sidebar
   return (
     <div
       className={`sidebar bg-white align-items-start shadow-sm d-flex flex-column`}
@@ -117,11 +121,11 @@ const SidebarMenu = ({ showmenuicon = true, onToggle }) => {
               src="/collapse.png"
               alt="Toggle Sidebar"
               className="cursor-pointer"
-              style={{ 
-                width: "20px", 
+              style={{
+                width: "20px",
                 height: "20px",
                 transform: isCollapsed ? "rotate(180deg)" : "rotate(0deg)",
-                transition: "transform 0.3s ease-in-out"
+                transition: "transform 0.3s ease-in-out",
               }}
               onClick={toggleSidebar}
             />
@@ -143,7 +147,7 @@ const SidebarMenu = ({ showmenuicon = true, onToggle }) => {
                 transition: "all 0.3s ease-in-out",
               }}
             >
-              <img src="/icons/add.png" alt="Create" style={{ width: "20px" }} className="me-2"/>
+              <img src="/icons/add.png" alt="Create" style={{ width: "20px" }} className="me-2" />
               {!isCollapsed && <span className="ms-2 fw-semibold">Create</span>}
             </button>
           </Link>

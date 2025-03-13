@@ -7,7 +7,7 @@ import SidebarMenu from '../../components/SideMenucollapse';
 import ProfileHeader from '@/components/profileHeader';
 import { FaBars } from 'react-icons/fa';
 
-export default function Content() {
+export default function CalendarSync() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
   const [isMobile, setIsMobile] = useState(false);
@@ -92,14 +92,14 @@ export default function Content() {
 
         {/* Content Header */}
         <div className="mb-3 mb-md-4">
-          <h1 className="h3 h2-md mb-1 mb-md-2 font-inter fw-bold">Content Upload</h1>
+          <h1 className="h3 h2-md mb-1 mb-md-2 font-inter fw-bold">Calendar Sync</h1>
           <p className="text-muted small">
-            Keep things related to your session in one place.
+            Tailor Your Schedule: Seamlessly Sync and Customize Your Meetings
           </p>
         </div>
         
         <div className='w-100 rounded-3 bg-light p-3 p-md-4'>
-            {/* Content */}
+            {/* create the part in here */}
         </div>
       </div>
     </div>
