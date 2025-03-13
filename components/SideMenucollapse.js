@@ -1,11 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Calendar from "./calendar";
-import { FaCog } from "react-icons/fa";
+import { FaCog, FaUser, FaBell, FaGlobe, FaCalendarAlt, FaVideo } from "react-icons/fa";
 import Link from 'next/link';
 
 const SidebarMenu = ({ showmenuicon = true, onToggle }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [currentView, setCurrentView] = useState("main"); // "main" or "settings"
 
   const toggleSidebar = () => {
     const newCollapsedState = !isCollapsed;
@@ -29,6 +30,72 @@ const SidebarMenu = ({ showmenuicon = true, onToggle }) => {
     { icon: <img src="/icons/analytics.png" alt="Calendar" style={{ width: "22px" }} />, label: "Analytics", path: "/analytics" },
     { icon: <img src="/icons/availability.png" alt="Calendar" style={{ width: "22px" }} />, label: "Availability", path: "/availability" },
   ];
+
+  const settingsItems = [
+    { icon: <FaUser size={20} />, label: "Profile", path: "/settings/profile" },
+    { icon: <FaCog size={20} />, label: "Settings", path: "/settings/general" },
+    { icon: <FaBell size={20} />, label: "Notifications", path: "/settings/notifications" },
+    { icon: <FaGlobe size={20} />, label: "Communication settings", path: "/settings/communication" },
+    { icon: <FaCalendarAlt size={20} />, label: "Calendar sync", path: "/settings/calendar-sync" },
+    { icon: <FaVideo size={20} />, label: "Integration", path: "/settings/integration" },
+  ];
+
+  // New function to render the settings view
+  const renderSettingsView = () => {
+    return (
+      <div className="settings-view w-100 h-100 d-flex flex-column px-3 ">
+
+        <h4 className="text-primary mb-5">AutoMeet</h4>
+        {/* Back button */}
+        <button 
+          className="btn btn-link text-primary ps-0 d-flex align-items-center" 
+          onClick={() => setCurrentView("main")}
+          style={{ textDecoration: 'none', fontSize: '18px' }}
+        >
+          <span style={{ fontSize: '15px' }}>&lt;</span>
+          <span className="ms-2 fs-10">Back to home</span>
+        </button>
+        
+        {/* Settings header */}
+        <span className="mb-4 fw-bold fs-5">Account settings</span>
+        
+        {/* Settings menu items */}
+        <div className="list-group list-group-flush ">
+          {settingsItems.map(({ icon, label, path }, index) => (
+            <Link
+              key={index}
+              href={path}
+              className="list-group-item fw-semibold list-group-item-action border-0 d-flex align-items-center px-0"
+              style={{
+                color: "#000",
+                fontSize: "18px",
+              }}
+            >
+              <span className="me-3">{icon}</span>
+              <span>{label}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  // Return the main sidebar or settings view based on currentView state
+  if (currentView === "settings") {
+    return (
+      <div
+        className={`sidebar bg-white align-items-start shadow-sm d-flex flex-column`}
+        style={{
+          width: "320px",
+          height: "97vh",
+          borderRadius: "15px",
+          padding: "20px",
+        }}
+      >
+        {renderSettingsView()}
+      </div>
+    );
+  }
 
   return (
     <div
@@ -121,11 +188,14 @@ const SidebarMenu = ({ showmenuicon = true, onToggle }) => {
 
       {/* Fixed Footer Section */}
       <div className="flex-shrink-0 mt-auto">
-        <Link
-          href="/settings"
+        <button
+          onClick={() => setCurrentView("settings")}
           className="list-group-item fw-semibold list-group-item-action border-0 d-flex align-items-center p-2"
           style={{
             color: "#000",
+            background: "none",
+            width: "100%",
+            textAlign: "left",
             justifyContent: isCollapsed ? "center" : "flex-start",
             paddingLeft: isCollapsed ? "0" : "16px",
             transition: "all 0.3s ease-in-out",
@@ -133,7 +203,7 @@ const SidebarMenu = ({ showmenuicon = true, onToggle }) => {
         >
           <FaCog size={20} />
           {!isCollapsed && <span className="ms-3">Settings</span>}
-        </Link>
+        </button>
       </div>
     </div>
   );
