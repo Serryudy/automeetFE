@@ -8,10 +8,32 @@ import ProfileHeader from '@/components/profileHeader';
 import Availability from '@/components/Availability';
 import { FaBars } from 'react-icons/fa';
 
+// Define eventData which was missing in the original code
+const eventData = [
+  {
+    title: "Team Meeting",
+    days: "Monday, Wednesday",
+    location: "Conference Room B",
+    color: "#FFE4B5" // Light orange
+  },
+  {
+    title: "Client Call",
+    days: "Tuesday, Thursday",
+    location: "Zoom",
+    color: "#E0FFFF" // Light cyan
+  },
+  {
+    title: "Project Review",
+    days: "Friday",
+    location: "Main Office",
+    color: "#E6E6FA" // Lavender
+  }
+];
 
-export default function Content() {
+export default function AvailabilityPage() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+  const [showEventCards, setShowEventCards] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
@@ -27,12 +49,57 @@ export default function Content() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    // Only show event cards if sidebar is collapsed AND window is wide enough
+    setShowEventCards(isSidebarCollapsed && windowWidth >= 1200);
+  }, [isSidebarCollapsed, windowWidth]);
 
   const handleSidebarToggle = (collapsed) => {
     setIsSidebarCollapsed(collapsed);
+    
+    // Show event cards only when sidebar is collapsed AND not in mobile view
+    if (!isMobile) {
+      if (collapsed) {
+        setTimeout(() => setShowEventCards(true), 150);
+      } else {
+        // Hide event cards immediately when sidebar expands
+        setShowEventCards(false);
+      }
+    }
   };
 
-
+  // Text size classes using Bootstrap instead of clamp
+  const textStyles = {
+    title: {
+      fontSize: '1.25rem',
+      fontWeight: 'normal',
+      color: '#000'
+    },
+    eventTitle: {
+      fontSize: '0.875rem',
+      fontWeight: '600',
+      color: '#000'
+    },
+    eventDays: {
+      fontSize: '0.75rem',
+      fontWeight: '600',
+      color: '#000'
+    },
+    location: {
+      fontSize: '0.75rem',
+      fontWeight: '600',
+      color: '#000'
+    },
+    locationValue: {
+      fontSize: '0.75rem',
+      color: '#000'
+    },
+    description: {
+      fontSize: '0.625rem',
+      fontWeight: '600',
+      color: '#000'
+    }
+  };
 
   return (
     <div className="d-flex page-background font-inter" style={{ minHeight: '100vh' }}>  
@@ -83,7 +150,7 @@ export default function Content() {
         className="flex-grow-1 p-3 p-md-4"
         style={{
           marginLeft: isMobile ? 0 : (isSidebarCollapsed ? '90px' : '340px'),
-          maxWidth: isMobile ? '100%' : (isSidebarCollapsed ? 'calc(100% - 120px)' : 'calc(100% - 360px)'),
+          maxWidth: isMobile ? '100%' : (isSidebarCollapsed ? 'calc(100% - 90px)' : 'calc(100% - 340px)'),
           transition: 'margin-left 0.3s ease-in-out, max-width 0.3s ease-in-out'
         }}
       >
@@ -96,13 +163,65 @@ export default function Content() {
         <div className="mb-3 mb-md-4">
           <h1 className="h3 h2-md mb-1 mb-md-2 font-inter fw-bold">Mark Your Availability</h1>
           <p className="text-muted small">
-          Stay ahead of your schedule and make every moment<br />
-          count with your weekly planner.
+            Stay ahead of your schedule and make every moment<br />
+            count with your weekly planner.
           </p>
         </div>
         
-        <div className='d-flex justify-content-start w-100'>
-           <Availability /> 
+        {/* Main content area - responsive layout */}
+        <div className="d-flex flex-column flex-lg-row gap-4">
+          {/* Calendar component */}
+          <div className="flex-grow-1">
+            <Availability />
+          </div>
+
+          {/* Event cards section */}
+          {(showEventCards || isMobile) && (
+            <div
+              className="mt-3 mt-lg-0"
+              style={{
+                width: isMobile ? '100%' : '300px',
+                minWidth: '25%',
+                backgroundColor: '#ffffff',
+                padding: '21px 17px',
+                borderRadius: '12px',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                animation: 'slideInFromRight 0.5s ease-out forwards'
+              }}
+            >
+              <div style={textStyles.title} className="mb-3">
+                Event description
+              </div>
+
+              <div className="d-flex flex-column gap-3">
+                {eventData.map((event, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      backgroundColor: event.color,
+                      padding: '8px',
+                      borderRadius: '6px'
+                    }}
+                    className="d-flex flex-column gap-2"
+                  >
+                    <div style={textStyles.eventTitle}>
+                      {event.title}
+                    </div>
+                    <div style={textStyles.eventDays}>{event.days}</div>
+                    <div className="d-flex align-items-center gap-1">
+                      <span style={textStyles.location}>Location</span>
+                      <img src="/location-icon.png" alt="Location Icon" style={{ width: '10px', height: '10px', objectFit: 'cover' }} />
+                      <span style={textStyles.locationValue}>{event.location}</span>
+                    </div>
+                    <div style={textStyles.description}>
+                      This meeting is about this thing where these things will be discussed. This meeting is this
+                      much relevant to you.
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -70,11 +70,11 @@ const Availability = () => {
   }, [currentDay]);
   
   // Generate time slots from 6:00 AM to 10:00 PM (used for display)
-  const timeSlots = Array.from({ length: 17 }, (_, i) => {
-    const hour = i + 6; // Start from 6 AM
+  const timeSlots = Array.from({ length: 24 }, (_, i) => {
+    const hour = (i + 6) % 24; // Start from 6 AM and cycle back
     const period = hour >= 12 ? 'PM' : 'AM';
     const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-    return `${displayHour}.00${period.toLowerCase()}`;
+    return `${displayHour} ${period}`;
   });
 
   // Week days
@@ -286,8 +286,7 @@ const Availability = () => {
     return { hour, minute };
   };
 
-  // Start dragging a slot
-  // Start dragging a slot
+
   const startDragging = (e, slot) => {
     e.stopPropagation();
     
@@ -308,10 +307,6 @@ const Availability = () => {
     document.body.style.userSelect = 'none';
   };
 
-  // Handle drag movement
-  // Handle drag movement
-  // Handle drag movement
-  // Handle drag movement
   const handleDrag = (e) => {
     if (!draggedSlot) return;
     
@@ -354,9 +349,7 @@ const Availability = () => {
       })
     );
   };
-  // End dragging
-  // End dragging with validation
-  // End dragging with validation
+
   const endDragging = () => {
     if (draggedSlot) {
       const slot = selectedSlots.find(s => s.id === draggedSlot.id);
