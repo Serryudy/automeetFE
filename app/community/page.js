@@ -5,9 +5,329 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../styles/global.css';
 import SidebarMenu from '../../components/SideMenucollapse';
 import ProfileHeader from '@/components/profileHeader';
+import MessageComponent from '@/components/MessageComponent';
 import { FaBars, FaSearch, FaFilter, FaPlus, FaEdit, FaTrash, FaTimes } from 'react-icons/fa';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 
+
+export default function Community() {
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+  const [isMobile, setIsMobile] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [viewMode, setViewMode] = useState('clients');
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [showGroupModal, setShowGroupModal] = useState(false);
+  const [editingContact, setEditingContact] = useState(null);
+  const [editingGroup, setEditingGroup] = useState(null);
+  // Add state for showing the MessageComponent
+  const [showMessageComponent, setShowMessageComponent] = useState(false);
+  // State for animation
+  const [messageAnimationState, setMessageAnimationState] = useState('hidden'); // 'hidden', 'animating', 'visible'
+   
+  // Ref for handling clicks outside popup
+  const contactModalRef = useRef(null);
+  const groupModalRef = useRef(null);
+  const messageComponentRef = useRef(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setWindowWidth(width);
+      setIsMobile(width < 768);
+      if (width >= 768) setShowMobileMenu(false);
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    
+    // Add click outside handler for modals
+    const handleClickOutside = (event) => {
+      // Handle contact modal clicks
+      if (contactModalRef.current && 
+          !contactModalRef.current.contains(event.target) && 
+          !event.target.closest('.contact-modal-trigger')) {
+        setShowContactModal(false);
+      }
+      
+      // Handle group modal clicks
+      if (groupModalRef.current && 
+          !groupModalRef.current.contains(event.target) && 
+          !event.target.closest('.group-modal-trigger')) {
+        setShowGroupModal(false);
+      }
+      
+      // Handle message component clicks
+      if (messageAnimationState === 'visible' && 
+          messageComponentRef.current && 
+          !messageComponentRef.current.contains(event.target) && 
+          !event.target.closest('.message-component-trigger')) {
+        closeMessageComponent();
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [messageAnimationState]);
+
+  const handleSidebarToggle = (collapsed) => {
+    setIsSidebarCollapsed(collapsed);
+  };
+  
+  // Handle group button click
+  const handleGroupButtonClick = () => {
+    if(viewMode === 'groups') {
+      setShowGroupModal(true);
+    } else {
+      setViewMode('groups');
+    }
+  };
+
+  const handleContactButtonClick = () => {
+    if(viewMode === 'clients') {
+      setShowContactModal(true);
+    } else {
+      setViewMode('clients');
+    }
+  };
+
+  // Updated message component toggle with animation
+  const toggleMessageComponent = () => {
+    if (messageAnimationState === 'hidden') {
+      // Open the message component
+      setShowMessageComponent(true);
+      // Start opening animation after a small delay to allow state to update
+      setTimeout(() => {
+        setMessageAnimationState('animating');
+        // After animation completes, set to fully visible
+        setTimeout(() => {
+          setMessageAnimationState('visible');
+        }, 300); // Match this time to your CSS transition time
+      }, 10);
+    } else {
+      closeMessageComponent();
+    }
+  };
+  
+  // Function to close message component with animation
+  const closeMessageComponent = () => {
+    setMessageAnimationState('animating-out');
+    // Wait for animation to complete before hiding component
+    setTimeout(() => {
+      setMessageAnimationState('hidden');
+      setShowMessageComponent(false);
+    }, 300); // Match this time to your CSS transition time
+  };
+
+  return (
+    <div className="d-flex page-background font-inter" style={{ minHeight: '100vh', position: 'relative' }}>  
+      {/* Mobile Menu Button */}
+      {isMobile && (
+        <button 
+          className="btn btn-light position-fixed rounded-circle p-2"
+          style={{ zIndex: 1001, top: '1rem', left: '1rem' }}
+          onClick={() => setShowMobileMenu(!showMobileMenu)}
+        >
+          <FaBars size={20} />
+        </button>
+      )}
+
+      {/* Sidebar Menu */}
+      <div 
+        style={{ 
+          position: 'fixed', 
+          left: 10, 
+          top: 10, 
+          bottom: 0, 
+          zIndex: 1000,
+          transform: isMobile ? `translateX(${showMobileMenu ? '0' : '-100%'})` : 'none',
+          transition: 'transform 0.3s ease-in-out'
+        }}
+      >
+        <SidebarMenu 
+          showmenuicon={true} 
+          onToggle={handleSidebarToggle}
+        />
+      </div>
+
+      {/* Mobile Overlay */}
+      {isMobile && showMobileMenu && (
+        <div
+          className="position-fixed top-0 start-0 w-100 h-100"
+          style={{
+            backgroundColor: 'rgba(0,0,0,0.3)',
+            zIndex: 999,
+            transition: 'opacity 0.3s'
+          }}
+          onClick={() => setShowMobileMenu(false)}
+        ></div>
+      )}
+
+      {/* Main content */}
+      <div 
+        className="flex-grow-1 p-2 p-md-4"
+        style={{
+          marginLeft: isMobile ? 0 : (isSidebarCollapsed ? '90px' : '340px'),
+          maxWidth: isMobile ? '100%' : (isSidebarCollapsed ? 'calc(100% - 90px)' : 'calc(100% - 340px)'),
+          transition: 'margin-left 0.3s ease-in-out, max-width 0.3s ease-in-out'
+        }}
+      >
+        {/* Profile Header */}
+        <div className="mb-3 mb-md-4" style={{ marginTop: isMobile ? '50px' : '0' }}>
+          <ProfileHeader />
+        </div>
+
+        {/* Content Header */}
+        <div className="mb-3 mb-md-4">
+          <h1 className="h4 h2-md mb-1 mb-md-2 font-inter fw-bold">Community</h1>
+          <p className="text-muted small">
+            Stay Connected and On Track
+          </p>
+        </div>
+
+        {/* Search and Filter with New Group and New Contact Buttons */}
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 mb-md-4 gap-3 ">
+          <div className="position-relative" style={{ flex: '1' }}>
+            <div className="input-group bg-white rounded-pill" style={{ height: windowWidth < 576 ? '40px' : '48px', border: '1px solid #e0e0e0' }}>
+              <span className="input-group-text bg-transparent border-0">
+                <FaSearch className="text-muted" />
+              </span>
+              <input
+                type="text"
+                className="form-control border-0 shadow-none"
+                placeholder={viewMode === 'clients' 
+                  ? "Looking for someone? Search by name, email, or details!" 
+                  : "Search for groups by name or description"}
+              />
+              <button className="btn btn-outline-secondary rounded-pill d-flex align-items-center gap-2 px-3 border-0">
+                Filter <FaFilter />
+              </button>
+            </div>
+          </div>
+          
+          {/* New Group Button */}
+          <button 
+            className={`btn btn-${viewMode === 'groups' ? 'primary' : 'secondary'} rounded-pill d-flex align-items-center gap-2 px-3 group-modal-trigger`} 
+            style={{height: windowWidth < 576 ? '40px' : '48px'}} 
+            onClick={handleGroupButtonClick}
+          >
+            <FaPlus /> New Group
+          </button>
+          
+          {/* New Contact Button */}
+          <button 
+            className={`btn btn-${viewMode === 'clients' ? 'primary' : 'secondary'} rounded-pill d-flex align-items-center gap-2 px-3 contact-modal-trigger`} 
+            style={{height: windowWidth < 576 ? '40px' : '48px'}} 
+            onClick={handleContactButtonClick}
+          >
+            <FaPlus /> New Contact
+          </button>
+        </div>
+        
+        <div className='w-100 rounded-3 bg-white p-2 p-md-4 shadow-sm'>
+          {/* Conditional rendering based on viewMode */}
+          {viewMode === 'clients' && 
+            <Contacts 
+              setShowContactModal={setShowContactModal} 
+              setEditingContact={setEditingContact} 
+            />
+          }
+          {viewMode === 'groups' && 
+            <Groups 
+              setShowGroupModal={setShowGroupModal}
+              setEditingGroup={setEditingGroup}
+            />
+          }
+        </div>
+        
+      </div>
+
+      {/* Conditionally render contact modal */}
+      {showContactModal && viewMode === 'clients' && (
+        <NewContact 
+          setShowContactModal={setShowContactModal} 
+          contactModalRef={contactModalRef}
+          editingContact={editingContact}
+          setEditingContact={setEditingContact}
+        />
+      )}
+      
+      {/* Conditionally render group modal */}
+      {showGroupModal && viewMode === 'groups' && (
+        <NewGroup 
+          setShowGroupModal={setShowGroupModal} 
+          groupModalRef={groupModalRef}
+          editingGroup={editingGroup}
+          setEditingGroup={setEditingGroup}
+        />
+      )}
+
+      {/* Chat Button - Fixed to bottom right corner */}
+      <button 
+        className='position-fixed d-flex bg-transparent justify-content-center align-items-center rounded-circle border-0 message-component-trigger'
+        style={{
+          bottom: '2rem',
+          right: '2rem',
+          width: '60px',
+          height: '60px',
+          zIndex: 1002,
+          cursor: 'pointer'
+        }}
+        onClick={toggleMessageComponent}
+      >
+        <img 
+          src='/chat.png' 
+          alt="Chat" 
+          style={{
+            width: '40px', 
+            height: '40px',
+            objectFit: 'contain'
+          }}
+        />
+      </button>
+      
+      {/* Dark Overlay - animates when message component is shown */}
+      {showMessageComponent && (
+        <div 
+          className="position-fixed top-0 start-0 w-100 h-100"
+          style={{
+            backgroundColor: messageAnimationState === 'hidden' ? 'rgba(0,0,0,0)' : 
+                             messageAnimationState === 'animating-out' ? 'rgba(0,0,0,0)' :
+                             'rgba(0,0,0,0.5)',
+            opacity: messageAnimationState === 'animating' || messageAnimationState === 'visible' ? 1 : 0,
+            zIndex: 1001,
+            transition: 'opacity 0.3s ease-in-out',
+            pointerEvents: messageAnimationState === 'visible' ? 'auto' : 'none'
+          }}
+          onClick={closeMessageComponent}
+        ></div>
+      )}
+      
+      {/* Conditionally render MessageComponent with animation */}
+      {showMessageComponent && (
+        <div 
+          className="position-fixed rounded-3 h-100 d-flex align-items-center justify-content-center" 
+          style={{
+            
+            right: messageAnimationState === 'hidden' ? '-420px' : 
+                  messageAnimationState === 'animating-out' ? '-420px' : '2rem',
+            width: isMobile ? '90vw' : '400px',
+            zIndex: 1002,
+            transition: 'right 0.3s ease-in-out',
+            overflow: 'hidden'
+          }}
+          ref={messageComponentRef}
+        >
+          <MessageComponent />
+        </div>
+      )}
+    </div>
+  );
+}
 
 const Contacts = ({ setShowContactModal, setEditingContact }) => {
   const [activePopup, setActivePopup] = useState(null);
@@ -719,219 +1039,3 @@ const NewGroup = ({ setShowGroupModal, groupModalRef, editingGroup, setEditingGr
   );
 };
 
-export default function Community() {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
-  const [isMobile, setIsMobile] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [viewMode, setViewMode] = useState('clients');
-  const [showContactModal, setShowContactModal] = useState(false);
-  const [showGroupModal, setShowGroupModal] = useState(false);
-  const [editingContact, setEditingContact] = useState(null);
-  const [editingGroup, setEditingGroup] = useState(null);
-   
-  // Ref for handling clicks outside popup
-  const contactModalRef = useRef(null);
-  const groupModalRef = useRef(null);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      setWindowWidth(width);
-      setIsMobile(width < 768);
-      if (width >= 768) setShowMobileMenu(false);
-    };
-    
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    
-    // Add click outside handler for modals
-    const handleClickOutside = (event) => {
-      // Handle contact modal clicks
-      if (contactModalRef.current && 
-          !contactModalRef.current.contains(event.target) && 
-          !event.target.closest('.contact-modal-trigger')) {
-        setShowContactModal(false);
-      }
-      
-      // Handle group modal clicks
-      if (groupModalRef.current && 
-          !groupModalRef.current.contains(event.target) && 
-          !event.target.closest('.group-modal-trigger')) {
-        setShowGroupModal(false);
-      }
-    };
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const handleSidebarToggle = (collapsed) => {
-    setIsSidebarCollapsed(collapsed);
-  };
-  
-  // Handle group button click
-  const handleGroupButtonClick = () => {
-    if(viewMode === 'groups') {
-      setShowGroupModal(true);
-    } else {
-      setViewMode('groups');
-    }
-  };
-
-  const handleContactButtonClick = () => {
-    if(viewMode === 'clients') {
-      setShowContactModal(true);
-    } else {
-      setViewMode('clients');
-    }
-  };
-
-  return (
-    <div className="d-flex page-background font-inter" style={{ minHeight: '100vh' }}>  
-      {/* Mobile Menu Button */}
-      {isMobile && (
-        <button 
-          className="btn btn-light position-fixed rounded-circle p-2"
-          style={{ zIndex: 1001, top: '1rem', left: '1rem' }}
-          onClick={() => setShowMobileMenu(!showMobileMenu)}
-        >
-          <FaBars size={20} />
-        </button>
-      )}
-
-      {/* Sidebar Menu */}
-      <div 
-        style={{ 
-          position: 'fixed', 
-          left: 10, 
-          top: 10, 
-          bottom: 0, 
-          zIndex: 1000,
-          transform: isMobile ? `translateX(${showMobileMenu ? '0' : '-100%'})` : 'none',
-          transition: 'transform 0.3s ease-in-out'
-        }}
-      >
-        <SidebarMenu 
-          showmenuicon={true} 
-          onToggle={handleSidebarToggle}
-        />
-      </div>
-
-      {/* Mobile Overlay */}
-      {isMobile && showMobileMenu && (
-        <div
-          className="position-fixed top-0 start-0 w-100 h-100"
-          style={{
-            backgroundColor: 'rgba(0,0,0,0.3)',
-            zIndex: 999,
-            transition: 'opacity 0.3s'
-          }}
-          onClick={() => setShowMobileMenu(false)}
-        ></div>
-      )}
-
-      {/* Main content */}
-      <div 
-        className="flex-grow-1 p-2 p-md-4"
-        style={{
-          marginLeft: isMobile ? 0 : (isSidebarCollapsed ? '90px' : '340px'),
-          maxWidth: isMobile ? '100%' : (isSidebarCollapsed ? 'calc(100% - 90px)' : 'calc(100% - 340px)'),
-          transition: 'margin-left 0.3s ease-in-out, max-width 0.3s ease-in-out'
-        }}
-      >
-        {/* Profile Header */}
-        <div className="mb-3 mb-md-4" style={{ marginTop: isMobile ? '50px' : '0' }}>
-          <ProfileHeader />
-        </div>
-
-        {/* Content Header */}
-        <div className="mb-3 mb-md-4">
-          <h1 className="h4 h2-md mb-1 mb-md-2 font-inter fw-bold">Community</h1>
-          <p className="text-muted small">
-            Stay Connected and On Track
-          </p>
-        </div>
-
-        {/* Search and Filter with New Group and New Contact Buttons */}
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 mb-md-4 gap-3 ">
-          <div className="position-relative" style={{ flex: '1' }}>
-            <div className="input-group bg-white rounded-pill" style={{ height: windowWidth < 576 ? '40px' : '48px', border: '1px solid #e0e0e0' }}>
-              <span className="input-group-text bg-transparent border-0">
-                <FaSearch className="text-muted" />
-              </span>
-              <input
-                type="text"
-                className="form-control border-0 shadow-none"
-                placeholder={viewMode === 'clients' 
-                  ? "Looking for someone? Search by name, email, or details!" 
-                  : "Search for groups by name or description"}
-              />
-              <button className="btn btn-outline-secondary rounded-pill d-flex align-items-center gap-2 px-3 border-0">
-                Filter <FaFilter />
-              </button>
-            </div>
-          </div>
-          
-          {/* New Group Button */}
-          <button 
-            className={`btn btn-${viewMode === 'groups' ? 'primary' : 'secondary'} rounded-pill d-flex align-items-center gap-2 px-3 group-modal-trigger`} 
-            style={{height: windowWidth < 576 ? '40px' : '48px'}} 
-            onClick={handleGroupButtonClick}
-          >
-            <FaPlus /> New Group
-          </button>
-          
-          {/* New Contact Button */}
-          <button 
-            className={`btn btn-${viewMode === 'clients' ? 'primary' : 'secondary'} rounded-pill d-flex align-items-center gap-2 px-3 contact-modal-trigger`} 
-            style={{height: windowWidth < 576 ? '40px' : '48px'}} 
-            onClick={handleContactButtonClick}
-          >
-            <FaPlus /> New Contact
-          </button>
-        </div>
-        
-        <div className='w-100 rounded-3 bg-white p-2 p-md-4 shadow-sm'>
-          {/* Conditional rendering based on viewMode */}
-          {viewMode === 'clients' && 
-            <Contacts 
-              setShowContactModal={setShowContactModal} 
-              setEditingContact={setEditingContact} 
-            />
-          }
-          {viewMode === 'groups' && 
-            <Groups 
-              setShowGroupModal={setShowGroupModal}
-              setEditingGroup={setEditingGroup}
-            />
-          }
-        </div>
-      </div>
-
-      {/* Conditionally render contact modal */}
-      {showContactModal && viewMode === 'clients' && (
-        <NewContact 
-          setShowContactModal={setShowContactModal} 
-          contactModalRef={contactModalRef}
-          editingContact={editingContact}
-          setEditingContact={setEditingContact}
-        />
-      )}
-      
-      {/* Conditionally render group modal */}
-      {showGroupModal && viewMode === 'groups' && (
-        <NewGroup 
-          setShowGroupModal={setShowGroupModal} 
-          groupModalRef={groupModalRef}
-          editingGroup={editingGroup}
-          setEditingGroup={setEditingGroup}
-        />
-      )}
-    </div>
-  );
-}
