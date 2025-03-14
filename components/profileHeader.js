@@ -74,7 +74,7 @@ const ProfileHeader = () => {
         
         {/* Notifications Popup */}
         {showNotifications && (
-          <div className="position-absolute end-0" style={{ zIndex: 1000, width: '350px' }}>
+          <div className="position-absolute end-0" style={{ zIndex: 1000, width: '450px' }}>
             <NotificationsComponent />
           </div>
         )}

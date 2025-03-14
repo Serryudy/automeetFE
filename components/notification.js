@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Link from 'next/link';
 
 const NotificationsComponent = () => {
   const [activeTab, setActiveTab] = useState('all');
@@ -126,7 +127,7 @@ const NotificationsComponent = () => {
         </div>
         
         <div className="card-footer bg-white text-center py-2">
-          <button className="btn btn-link text-primary text-decoration-none">View all ...</button>
+          <Link href="/settings/notifications"><button className="btn btn-link text-primary text-decoration-none">View all ...</button></Link>
         </div>
       </div>
     </div>

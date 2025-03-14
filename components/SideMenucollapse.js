@@ -192,8 +192,8 @@ const SidebarMenu = ({ showmenuicon = true, onToggle }) => {
 
       {/* Fixed Footer Section */}
       <div className="flex-shrink-0 mt-auto">
-        <button
-          onClick={() => setCurrentView("settings")}
+        <Link
+          href="/settings"
           className="list-group-item fw-semibold list-group-item-action border-0 d-flex align-items-center p-2"
           style={{
             color: "#000",
@@ -207,7 +207,7 @@ const SidebarMenu = ({ showmenuicon = true, onToggle }) => {
         >
           <FaCog size={20} />
           {!isCollapsed && <span className="ms-3">Settings</span>}
-        </button>
+        </Link>
       </div>
     </div>
   );
